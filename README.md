@@ -1,2 +1,2 @@
 #crypto_collab
-woooooooo
+hello friends
