@@ -1,5 +1,6 @@
 from datetime import datetime
 import pandas as pd
+import numpy as np
 import os
 
 
@@ -18,7 +19,7 @@ def read_trade_data(filepath):
     :param filepath: path to csv file
     :returns: (exchange, symbol, preprocessed Pandas dataframe)
     """
-    trades = pd.read_csv(filepath)
+    trades = pd.read_parquet(filepath)
     # convert dates from unix timestamps
     trades['date'] = trades['date'].apply(convert_dates)
     trades.set_index('date', inplace=True)
@@ -46,11 +47,35 @@ def write_processed(exchange, symbol, data, loc=None):
     filename = f'{exchange}_{symbol}_trades.parquet'
     path = os.getcwd() if loc is None else loc
     filepath = os.path.join(path, filename)
-    data.to_parquet(filepath)
+    new_data = featurize(data)
+    new_data.to_parquet(filepath)
 
+
+def featurize(trade_data):
+    """
+    Takes trade data, adds features, and outputs the new dataframe.
+
+    :param filename: data frame of trade data
+    """
+    # trade_data = pd.read_parquet(filename) 
+    trade_df = pd.DataFrame(trade_data) 
+    
+    # Simple Moving Averages with differing windows
+    trade_df["SMA5"] = trade_df["price"].rolling(window=5).mean()
+    trade_df["SMA10"] = trade_df["price"].rolling(window=10).mean()
+    trade_df["SMA25"] = trade_df["price"].rolling(window=25).mean()
+    trade_df["SMA50"] = trade_df["price"].rolling(window=50).mean()
+    trade_df["SMA100"] = trade_df["price"].rolling(window=100).mean()
+
+    # Exponentially weighted mean
+    trade_df["ewm"] = trade_df["price"].ewm(com=0.5).mean()
+
+    # Fast Fourier Transform
+    trade_df["fast_fourier"] = np.fft.fft(trade_df["price"])
+    
+    return trade_df
 
 if __name__ == "__main__":
     exchange, symbol, data = read_trade_data('Bitfinex_BTCEUR_trades_'
                                              '2018_02_02.csv')
     write_processed(exchange, symbol, data)
-
