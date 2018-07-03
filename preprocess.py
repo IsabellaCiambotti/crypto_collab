@@ -50,7 +50,6 @@ def write_processed(exchange, symbol, data, loc=None):
 
 
 if __name__ == "__main__":
-    exchange, symbol, data = read_trade_data('Bitfinex_BTCEUR_trades_'
-                                             '2018_02_02.csv')
+    exchange, symbol, data = read_trade_data('Bitfinex_BTCUSD_trades_2018_02_02.csv')
     write_processed(exchange, symbol, data)
 
