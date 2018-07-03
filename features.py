@@ -17,3 +17,6 @@ df['ewma_com1'] = df['price'].ewm(com=1).mean()
 
 # Fast Fourier Transform
 df["fast_fourier"] = np.fft.fft(df["price"])
+
+df_minmax = df.resample('T')['price'].agg(['min', 'max'])
+
