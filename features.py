@@ -12,8 +12,8 @@ df["SMA50"] = df["price"].rolling(window=50).mean()
 df["SMA100"] = df["price"].rolling(window=100).mean()
 
 # Exponentially weighted mean
-df["ewm"] = df["price"].ewm(com=0.5).mean()
+df['ewma_com05'] = df['price'].ewm(com=0.5).mean()
+df['ewma_com1'] = df['price'].ewm(com=1).mean()
 
 # Fast Fourier Transform
 df["fast_fourier"] = np.fft.fft(df["price"])
-
