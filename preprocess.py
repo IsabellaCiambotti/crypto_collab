@@ -28,7 +28,7 @@ def read_trade_data(filepath):
     assert trades['exchange'].nunique() == 1, 'Multiple exchanges present'
     assert trades['symbol'].nunique() == 1, 'Multiple symbols present'
     # select relevant columns
-    trade_features = trades[['price', 'amount', 'sell']]
+    trade_features = trades[['PRICE', 'amount', 'sell']]
     exchange = trades['exchange'].iloc[0]
     symbol = trades['symbol'].iloc[0] #if it's passed the checks above^
     return exchange, symbol, trade_features
@@ -62,18 +62,18 @@ def featurize(filename):
     trade_df["date"] = trade_df["MTS"].apply(lambda x: datetime.fromtimestamp(x / 1000))
     
     # Simple Moving Averages with differing windows
-    trade_df["SMA5"] = trade_df["price"].rolling(window=5).mean()
-    trade_df["SMA10"] = trade_df["price"].rolling(window=10).mean()
-    trade_df["SMA25"] = trade_df["price"].rolling(window=25).mean()
-    trade_df["SMA50"] = trade_df["price"].rolling(window=50).mean()
-    trade_df["SMA100"] = trade_df["price"].rolling(window=100).mean()
+    trade_df["SMA5"] = trade_df["PRICE"].rolling(window=5).mean()
+    trade_df["SMA10"] = trade_df["PRICE"].rolling(window=10).mean()
+    trade_df["SMA25"] = trade_df["PRICE"].rolling(window=25).mean()
+    trade_df["SMA50"] = trade_df["PRICE"].rolling(window=50).mean()
+    trade_df["SMA100"] = trade_df["PRICE"].rolling(window=100).mean()
 
     # Exponentially weighted mean
-    trade_df["ewm_com05"] = trade_df["price"].ewm(com=0.5).mean()
-    trade_df["ewm_com1"] = trade_df["price"].ewm(com=1).mean()
+    trade_df["ewm_com05"] = trade_df["PRICE"].ewm(com=0.5).mean()
+    trade_df["ewm_com1"] = trade_df["PRICE"].ewm(com=1).mean()
 
     # Fast Fourier Transform
-    trade_df["fast_fourier"] = np.fft.fft(trade_df["price"]) 
+    trade_df["fast_fourier"] = np.fft.fft(trade_df["PRICE"]) 
     return trade_df
 
 if __name__ == "__main__":
