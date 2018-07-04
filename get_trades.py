@@ -6,11 +6,11 @@ import pandas as pd
 # base URL for GET request to obtain trade data
 BASEURL = 'https://api.bitfinex.com/v2/trades/'
 # coin pair to obtain trades for
-SYMBOL = 'tEOSUSD'
+SYMBOL = 'tXRPUSD'
 # number of trades to obtain per query
 LIMIT = 1000
 # number of total requests to send
-REQUESTS = 30000
+REQUESTS = 20000
 # time between requests in seconds
 WAIT = 1
 
